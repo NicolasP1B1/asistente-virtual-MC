@@ -28,7 +28,7 @@
             respuestaDiv.style.display = "block";
             respuestaDiv.innerHTML = "Procesando..."; // Mensaje de carga
 
-            fetch("TU_WEBHOOK_DE_MAKE", {
+            fetch("https://hook.us2.make.com/et6dyoszsl2i9s6rrbv9d8geff6rwh0y", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ consulta: consulta })
