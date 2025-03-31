@@ -3,46 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Asistente Virtual</title>
+    <title>Asistente de Crisis TI</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 400px;
-            margin: 50px auto;
-            padding: 20px;
-            text-align: center;
-        }
-        input, textarea, button {
-            width: 100%;
-            margin-top: 10px;
-            padding: 10px;
-        }
+        body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
+        textarea { width: 80%; height: 100px; }
+        button { padding: 10px 15px; margin-top: 10px; cursor: pointer; }
+        #respuesta { margin-top: 20px; padding: 10px; border: 1px solid #ccc; display: none; }
     </style>
 </head>
 <body>
-    <h2>Asistente Virtual</h2>
-    <form id="consultaForm">
-        <input type="text" name="nombre" placeholder="Tu nombre" required>
-        <input type="email" name="email" placeholder="Tu correo" required>
-        <textarea name="consulta" placeholder="Describe tu problema" required></textarea>
-        <button type="submit">Enviar Consulta</button>
-    </form>
+    <h2>Asistente de Crisis TI</h2>
+    <p>Escribe tu consulta y recibirás una respuesta basada en la guía.</p>
+    
+    <textarea id="consulta" placeholder="Escribe tu consulta aquí..."></textarea><br>
+    <button onclick="enviarConsulta()">Enviar</button>
+
+    <div id="respuesta"></div>
 
     <script>
-        document.getElementById("consultaForm").addEventListener("submit", async function(event) {
-            event.preventDefault();
-            const formData = new FormData(this);
-            const data = Object.fromEntries(formData.entries());
+        function enviarConsulta() {
+            let consulta = document.getElementById("consulta").value;
+            let respuestaDiv = document.getElementById("respuesta");
 
-            await fetch("https://hook.us2.make.com/et6dyoszsl2i9s6rrbv9d8geff6rwh0y", { 
+            respuestaDiv.style.display = "block";
+            respuestaDiv.innerHTML = "Procesando..."; // Mensaje de carga
+
+            fetch("TU_WEBHOOK_DE_MAKE", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(data)
+                body: JSON.stringify({ consulta: consulta })
+            })
+            .then(response => response.json())
+            .then(data => {
+                respuestaDiv.innerHTML = "<strong>Respuesta:</strong> " + (data.respuesta || "Hubo un error.");
+            })
+            .catch(error => {
+                respuestaDiv.innerHTML = "Error al obtener respuesta.";
             });
-
-            alert("Consulta enviada correctamente.");
-            this.reset();
-        });
+        }
     </script>
 </body>
 </html>
