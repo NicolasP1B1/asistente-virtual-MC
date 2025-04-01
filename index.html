@@ -14,13 +14,13 @@
 <body>
     <h2>Asistente de Crisis TI</h2>
     <p>Escribe tu consulta y recibirás una respuesta basada en la guía.</p>
-    
+
     <textarea id="consulta" placeholder="Escribe tu consulta aquí..."></textarea><br>
     <button onclick="enviarConsulta()">Enviar</button>
 
     <div id="respuesta"></div>
 
-<script> 
+    <script>
         function enviarConsulta() {
             let consulta = document.getElementById("consulta").value;
             let respuestaDiv = document.getElementById("respuesta");
@@ -28,20 +28,33 @@
             respuestaDiv.style.display = "block";
             respuestaDiv.innerHTML = "Procesando..."; // Mensaje de carga
 
-            fetch("https://hook.us2.make.com/g9a23fphvtgfnlrckoquyudcwtunykkb", {
+            fetch("https://hook.us2.make.com/g9a23fphvtgfnlrckoquyudcwtunykkb", { // Reemplaza con la URL de tu primer webhook
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ consulta: consulta })
             })
             .then(response => response.json())
             .then(data => {
-                respuestaDiv.innerHTML = "<strong>Respuesta:</strong> " + (data.respuesta || "Hubo un error.");
+                console.log("Respuesta del primer webhook:", data);
+                const id = data.id_respuesta; // Obtener el ID de la respuesta
+
+                // Realizar la segunda solicitud para obtener la respuesta completa
+                fetch(`https://hook.us2.make.com/vmtvanjkbpx5jtgfy9ud7qiwea3ff7qw?id=${id}`) // Reemplaza con la URL de tu segundo webhook
+                    .then(response => response.json())
+                    .then(respuestaCompleta => {
+                        console.log("Respuesta del segundo webhook:", respuestaCompleta);
+                        respuestaDiv.innerHTML = "<strong>Respuesta:</strong> " + (respuestaCompleta.choices[0].message.content || "Hubo un error.");
+                    })
+                    .catch(error => {
+                        console.error("Error al obtener la respuesta completa:", error);
+                        respuestaDiv.innerHTML = "Error al obtener la respuesta.";
+                    });
             })
             .catch(error => {
-                respuestaDiv.innerHTML = "Error al obtener respuesta.";
+                console.error("Error al enviar la consulta:", error);
+                respuestaDiv.innerHTML = "Error al enviar la consulta.";
             });
         }
-</script>" 
+    </script>
 </body>
 </html>
-
