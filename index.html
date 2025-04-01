@@ -20,28 +20,35 @@
 
     <div id="respuesta"></div>
 
-    <script>
-        function enviarConsulta() {
-            let consulta = document.getElementById("consulta").value;
-            let respuestaDiv = document.getElementById("respuesta");
+   <script> 
+    function enviarConsulta() {
+        let consulta = document.getElementById("consulta").value;
+        let respuestaDiv = document.getElementById("respuesta");
 
-            respuestaDiv.style.display = "block";
-            respuestaDiv.innerHTML = "Procesando..."; // Mensaje de carga
+        respuestaDiv.style.display = "block";
+        respuestaDiv.innerHTML = "Procesando..."; // Mensaje de carga
 
-            fetch("https://hook.us2.make.com/g9a23fphvtgfnlrckoquyudcwtunykkb", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ consulta: consulta })
-            })
-            .then(response => response.json())
-            .then(data => {
-                respuestaDiv.innerHTML = "<strong>Respuesta:</strong> " + (data.respuesta || "Hubo un error.");
-            })
-            .catch(error => {
-                respuestaDiv.innerHTML = "Error al obtener respuesta.";
-            });
-        }
-    </script>
+        fetch("https://hook.us2.make.com/g9a23fphvtgfnlrckoquyudcwtunykkb", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ consulta: consulta })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Error en la respuesta del servidor");
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log("Respuesta del servidor:", data); // Para depuración
+            respuestaDiv.innerHTML = "<strong>Respuesta:</strong> " + (data.respuesta || "Hubo un error.");
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            respuestaDiv.innerHTML = "Error al obtener respuesta.";
+        });
+    }
+</script>
 </body>
 </html>
 
