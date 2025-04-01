@@ -31,16 +31,16 @@
             if (!response.ok) {
                 throw new Error("Error en la respuesta del servidor");
             }
-            return response.text(); // Cambiado a response.text()
+            return response.text();
         })
         .then(data => {
             console.log("Respuesta del servidor:", data);
             if (data === "Accepted") {
-                respuestaDiv.innerHTML = "<strong>Respuesta:</strong> Solicitud aceptada, en proceso.";
+                respuestaDiv.innerHTML = "Cargando respuesta...";
             } else {
                 try {
                     const jsonData = JSON.parse(data);
-                    respuestaDiv.innerHTML = "<strong>Respuesta:</strong> " + (jsonData.respuesta || "Hubo un error.");
+                    respuestaDiv.innerHTML = "<strong>Respuesta:</strong> " + (jsonData.choices[0].message.content || "Hubo un error.");
                 } catch (e) {
                     respuestaDiv.innerHTML = "<strong>Respuesta:</strong> Error al procesar la respuesta.";
                 }
