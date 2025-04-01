@@ -20,32 +20,34 @@
 
     <div id="respuesta"></div>
 
- <script> 
+<script>
     function enviarConsulta() {
-        let consulta = document.getElementById("consulta").value;
-        let respuestaDiv = document.getElementById("respuesta");
-
-        respuestaDiv.style.display = "block";
-        respuestaDiv.innerHTML = "Procesando..."; // Mensaje de carga
+        // ... (código anterior) ...
 
         fetch("https://hook.us2.make.com/g9a23fphvtgfnlrckoquyudcwtunykkb", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ consulta: consulta })
+            // ... (configuración de fetch) ...
         })
         .then(response => {
             if (!response.ok) {
                 throw new Error("Error en la respuesta del servidor");
             }
-            return response.json();
+            return response.text(); // Cambiado a response.text()
         })
         .then(data => {
-            console.log("Respuesta del servidor:", data); // <-- VERIFICAR QUÉ LLEGA AQUÍ
-            respuestaDiv.innerHTML = "<strong>Respuesta:</strong> " + (data.respuesta || "Hubo un error.");
+            console.log("Respuesta del servidor:", data);
+            if (data === "Accepted") {
+                respuestaDiv.innerHTML = "<strong>Respuesta:</strong> Solicitud aceptada, en proceso.";
+            } else {
+                try {
+                    const jsonData = JSON.parse(data);
+                    respuestaDiv.innerHTML = "<strong>Respuesta:</strong> " + (jsonData.respuesta || "Hubo un error.");
+                } catch (e) {
+                    respuestaDiv.innerHTML = "<strong>Respuesta:</strong> Error al procesar la respuesta.";
+                }
+            }
         })
         .catch(error => {
-            console.error("Error:", error);
-            respuestaDiv.innerHTML = "Error al obtener respuesta.";
+            // ... (manejo de errores) ...
         });
     }
 </script>
