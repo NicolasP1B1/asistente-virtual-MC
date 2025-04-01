@@ -20,7 +20,7 @@
 
     <div id="respuesta"></div>
 
-   <script> 
+ <script> 
     function enviarConsulta() {
         let consulta = document.getElementById("consulta").value;
         let respuestaDiv = document.getElementById("respuesta");
@@ -40,7 +40,7 @@
             return response.json();
         })
         .then(data => {
-            console.log("Respuesta del servidor:", data); // Para depuración
+            console.log("Respuesta del servidor:", data); // <-- VERIFICAR QUÉ LLEGA AQUÍ
             respuestaDiv.innerHTML = "<strong>Respuesta:</strong> " + (data.respuesta || "Hubo un error.");
         })
         .catch(error => {
