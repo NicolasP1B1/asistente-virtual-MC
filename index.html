@@ -33,14 +33,20 @@
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ consulta: consulta })
         })
-        .then(response => response.json()) // Convertir respuesta a JSON
-        .then(data => {
-            console.log("Respuesta de Make:", data); // Verifica la respuesta en la consola
-            if (data && data.respuesta) {
-                respuestaDiv.innerHTML = "<strong>Respuesta:</strong> " + data.respuesta;
-            } else {
-                respuestaDiv.innerHTML = "<strong>Respuesta:</strong> Hubo un error en la respuesta.";
-            }
+        .then(response => response.text()) // Recibimos como texto para manejar caracteres inválidos
+        .then(text => {
+            console.log("Respuesta de Make (Texto Crudo):", text);
+
+            // Eliminamos caracteres de control inválidos antes de convertir a JSON
+            let respuestaLimpia = text.replace(/[\u0000-\u001F\u007F-\u009F]/g, ""); 
+
+            // Convertimos a JSON después de limpiar
+            let data = JSON.parse(respuestaLimpia);
+
+            console.log("Respuesta de Make (Limpia):", data);
+
+            // Mostramos la respuesta en la página
+            respuestaDiv.innerHTML = "<strong>Respuesta:</strong> " + (data.respuesta || "Hubo un error.");
         })
         .catch(error => {
             console.error("Error en la solicitud:", error);
@@ -48,6 +54,7 @@
         });
     }
 </script>
+
 
 </body>
 </html>
