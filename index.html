@@ -20,27 +20,34 @@
 
     <div id="respuesta"></div>
 
-<script> 
-        function enviarConsulta() {
-            let consulta = document.getElementById("consulta").value;
-            let respuestaDiv = document.getElementById("respuesta");
+<script>
+    function enviarConsulta() {
+        let consulta = document.getElementById("consulta").value;
+        let respuestaDiv = document.getElementById("respuesta");
 
-            respuestaDiv.style.display = "block";
-            respuestaDiv.innerHTML = "Procesando..."; // Mensaje de carga
+        respuestaDiv.style.display = "block";
+        respuestaDiv.innerHTML = "Procesando..."; // Mensaje de carga
 
-            fetch("https://hook.us2.make.com/g9a23fphvtgfnlrckoquyudcwtunykkb", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ consulta: consulta })
-            })
-            .then(response => response.json())
-            .then(data => {
-                respuestaDiv.innerHTML = "<strong>Respuesta:</strong> " + (data.respuesta || "Hubo un error.");
-            })
-            .catch(error => {
-                respuestaDiv.innerHTML = "Error al obtener respuesta.";
-            });
-        }
+        fetch("https://hook.us2.make.com/g9a23fphvtgfnlrckoquyudcwtunykkb", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ consulta: consulta })
+        })
+        .then(response => response.json()) // Convertir respuesta a JSON
+        .then(data => {
+            console.log("Respuesta de Make:", data); // Verifica la respuesta en la consola
+            if (data && data.respuesta) {
+                respuestaDiv.innerHTML = "<strong>Respuesta:</strong> " + data.respuesta;
+            } else {
+                respuestaDiv.innerHTML = "<strong>Respuesta:</strong> Hubo un error en la respuesta.";
+            }
+        })
+        .catch(error => {
+            console.error("Error en la solicitud:", error);
+            respuestaDiv.innerHTML = "Error al obtener respuesta.";
+        });
+    }
 </script>
+
 </body>
 </html>
