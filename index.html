@@ -33,25 +33,12 @@
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ consulta: consulta })
         })
-        .then(response => response.text()) // Recibimos como texto para manejar caracteres inválidos
-        .then(text => {
-            console.log("Respuesta de Make (Texto Crudo):", text);
-
-            // Eliminamos caracteres de control inválidos antes de convertir a JSON
-            let respuestaLimpia = text.replace(/[\u0000-\u001F\u007F-\u009F]/g, ""); 
-
-            // Convertimos a JSON después de limpiar
-            let data = JSON.parse(respuestaLimpia);
-
-            console.log("Respuesta de Make (Limpia):", data);
-
-            // Mostramos la respuesta en la página
+        .then(response => response.json()) 
         .then(data => {
-            console.log("Respuesta completa de Make:", data); // Ver en consola lo que devuelve la API
-            let mensaje = data.respuesta || "Hubo un error.";
-                respuestaDiv.innerHTML = "<strong>Respuesta:</strong> " + mensaje;
+            console.log("Respuesta completa de Make:", data); // Verificar la respuesta en consola
+            let mensaje = data.respuesta || "Hubo un error."; // Extraer mensaje
+            respuestaDiv.innerHTML = "<strong>Respuesta:</strong> " + mensaje;
         })
-
         .catch(error => {
             console.error("Error en la solicitud:", error);
             respuestaDiv.innerHTML = "Error al obtener respuesta.";
